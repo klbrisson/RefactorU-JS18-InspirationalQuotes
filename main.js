@@ -22,31 +22,102 @@ var existingQuotes =
 	}
 
 // QUOTE CREATION
+	// Creates unique ID
+	var uniqueID = 0;
+	function unique() {
+		return uniqueID++;
+	}
 	// Quote Constructor
 	function Quote (text, author) {
 		this.text = text;
 		this.author = author;
+		this.id = unique();
 	}
+
+	// AllQuotes Object constructor
+	function AllQuotes (quoteObj) {
+		// this[quoteObj.id] = quoteObj;
+	}
+
 
 	// Create quote html element from quote object and html template
 	function createQuote(quoteObj) {
 		var newQuote = $('.quote.template').clone();
-		newQuote.find('.quote-text').text('\"' + quoteObj.text + '\"');
-		newQuote.find('.quote-author').text('- ' + quoteObj.author);
-		newQuote.removeClass('template');
+		newQuote.find('.quote-text').text(quoteObj.text);
+		newQuote.find('.quote-author').text(quoteObj.author);
+		newQuote.removeClass('template').attr('data-id',quoteObj.id);
 		return newQuote;
+	}
+
+
+	// render quote function
+	function renderQuotes(objOfQuotes) {
+	$('.quote-container').empty();
+	for (key in objOfQuotes) {
+		$('.quote-container').prepend(createQuote(objOfQuotes[key]));
+	}
+
+	// arr.map(
+	// 	function(quote) {
+	// 		$('.quote-container').append(createQuote(quote));
+	// 	});
+	};
+
+	// adds a quote object to allQuotes
+	function addQuote (quoteObj) {
+		allQuotes[quoteObj.id] = quoteObj;
 	}
 
 
 
 
-	// // render existing quotes
-	// var quoteArr = existingQuotes.map(function(arr) {
-	// 	return new Quote(arr[0], arr[1]);
+
+
+
+	// // Get quotes from local storage, re-create quote objects, render quotes
+	// var quoteArray = JSON.parse(localStorage.getItem('quotes'));
+	// quoteArray = quoteArray.map(function(obj) {
+	// 	return new Quote(obj.text, obj.author);
 	// });
-	// Array of quote objects 
-	var quoteArray = JSON.parse(localStorage.getItem('quotes'));
-	console.log(quoteArray);
+	// renderQuotes(quoteArray);
+	// console.log(quoteArray);
+
+	// Initial quotes - takes an array of quote/author strings, creates objects, then maps through
+	// the array to add the quote objects to an object for all quotes by unique id
+	var quoteArray = [];
+
+
+	for (var i=0; i<existingQuotes.length; i++) {
+		 quoteArray.push( new Quote (existingQuotes[i][0], existingQuotes[i][1]) );
+	}
+	var allQuotes = new AllQuotes();
+	quoteArray.map(addQuote);
+	console.log(allQuotes);
+
+	renderQuotes(allQuotes);
+	
+
+
+
+	// filter quotes by author
+	function filterByAuthor(quotesObj, author) {
+		var authorQuotes = new AllQuotes();
+		for (key in quotesObj) {
+			if (quotesObj[key].author === author) {
+				addQuote
+			}
+		}
+
+
+
+		var authorArray = []
+		for(var i=0; i<arr.length; i++) {
+			if (arr[i].author === author) {
+				authorArray.push(arr[i]);
+			}
+		}
+		return authorArray;
+	}
 
 
 
@@ -56,34 +127,77 @@ var existingQuotes =
 		$('.quote-form').toggle();
 	});
 
+	// Submit new quote, validate input, create quote object, push to quote array, save to local storage, and re-render quotes
 	$(document).on('submit','.quote-form', function() {
-
 		var quoteText = $('#new-text').val();
 		var quoteAuthor = $('#new-author').val();
 		// validate text
 		if (isInputValid(quoteText) && isInputValid(quoteAuthor)) {
-			//create quote object and add to array
 			var newQuote = new Quote(quoteText,quoteAuthor);
-			quoteArray.unshift(newQuote);
-	console.log(quoteArray);
+			addQuote(newQuote);
+			renderQuotes(allQuotes);
 
-			//render quotes from array
-			$('.quote-container').empty();
 
-			quoteArray.map(
-				function(quote) {
-					$('.quote-container').append(createQuote(quote));
-				});
+			// quoteArray.unshift(newQuote);
 
-			//save quotes to local storage
 			localStorage.setItem('quotes',JSON.stringify(quoteArray));
+			$(this)[0].reset();
+			$(this).toggle();
 		}
-
-		// $('.main-container').append(newQuote);
-		$(this)[0].reset();
-		$(this).toggle();
 		return false;
 	});
 
+	// When user clicks on an author, sorts quotes by author and re-renders page
+	$(document).on('click','.quote-author', function() {
+		renderQuotes(filterByAuthor(quoteArray, $(this).text()));
+	});
+
+
+	// Delete quote
+	$(document).on('click','.delete-btn', function() {
+		$(this).closest('.quote').remove();
+
+	});
+
+
+
+
+
+
+
 
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

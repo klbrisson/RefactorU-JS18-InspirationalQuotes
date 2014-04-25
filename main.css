@@ -1,16 +1,19 @@
-a {
-	text-decoration: none;
-	color: #000;
-}
 
-.main-container {
-	width: 70%;
-	margin: auto;
-}
 .template, .quote-form {
 	display: none;
 }
 .quote {
 	border: 1px solid #000;
 	width: 60%;
+	position: relative;
+}
+
+.quote-author, .delete-btn {
+	border: none;
+}
+
+.delete-btn {
+	position: absolute;
+	bottom: 10px;
+	right: 10px;
 }

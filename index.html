@@ -3,27 +3,29 @@
 <head>
   <meta charset="utf-8">
   <title>JS18 - Inspirational Quotes</title>
-  <link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.1/normalize.min.css">
+  <link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.1/css/bootstrap.min.css">
   <link rel="stylesheet" type="text/css" href="main.css">
 </head>
 <body>
-
-	<div class="main-container">
+	
+	<div class="container">
 		<header>
 			<h1>Inspirational Quotes</h1>
 		</header>
-		<button id="add-quote">Add Quote</button>
+		<button type="button" class="btn btn-default" id="add-quote">Add Quote</button>
 		<form class="quote-form">
 			<textarea id="new-text" placeholder="New Quote"></textarea>
 			<label>Author</label><input id="new-author">
 			<input type="submit">
 		</form>
+
 		<div class="quote template">
-			<p class="quote-text"></p>
-			<a class="quote-author" href="authors.html"></a>
+			<p>"<span class="quote-text"></span>"</p>
+			<button class="quote-author btn btn-default btn-sm"></button>
+			<button class="delete-btn btn btn-default">✖</button>
 		</div>
-		<div class="quote-container">
-		</div>
+
+		<div class="quote-container"></div>
 	</div>
 
 
