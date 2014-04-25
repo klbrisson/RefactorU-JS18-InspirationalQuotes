@@ -1,4 +1,3 @@
-$(document).on('ready', function() {
 
 // Prepopulate some quotes
 var existingQuotes =
@@ -17,112 +16,122 @@ var existingQuotes =
 
 
 // QUOTE FORM VALIDATION
-	function isInputValid (input) {
-		return typeof input !== 'string' || input === '' ? false : true;
-	}
+function isInputValid (input) {
+	return typeof input !== 'string' || input === '' ? false : true;
+}
 
 // QUOTE CREATION
-	// Creates unique ID
-	var uniqueID = 0;
-	function unique() {
-		return uniqueID++;
+// Creates unique ID
+var uniqueID = 0;
+function unique() {
+	return uniqueID++;
+}
+// Quote Constructor
+function Quote (text, author) {
+	this.text = text;
+	this.author = author;
+	this.id = unique();
+}
+
+// QuoteList Object constructor
+function QuoteList (obj) {
+	if (arguments.length === 0) {
 	}
-	// Quote Constructor
-	function Quote (text, author) {
-		this.text = text;
-		this.author = author;
-		this.id = unique();
+	else if (arguments.length === 1 && obj.id === undefined) {
+		for (key in obj) {
+			this[key] = obj[key];
+		}
 	}
-
-	// AllQuotes Object constructor
-	function AllQuotes (quoteObj) {
-		// this[quoteObj.id] = quoteObj;
+	else if (typeof obj.id !== undefined) {
+		for (var i=0; i<arguments.length; i++){
+			this[arguments[i].id] = arguments[i];
+		}
 	}
+}
 
 
-	// Create quote html element from quote object and html template
-	function createQuote(quoteObj) {
-		var newQuote = $('.quote.template').clone();
-		newQuote.find('.quote-text').text(quoteObj.text);
-		newQuote.find('.quote-author').text(quoteObj.author);
-		newQuote.removeClass('template').attr('data-id',quoteObj.id);
-		return newQuote;
-	}
+// Create quote html element from quote object and html template
+function createQuote(quoteObj) {
+	var newQuote = $('.quote.template').clone();
+	newQuote.find('.quote-text').text(quoteObj.text);
+	newQuote.find('.quote-author').text(quoteObj.author);
+	newQuote.removeClass('template').attr('data-id',quoteObj.id);
+	return newQuote;
+}
 
 
-	// render quote function
-	function renderQuotes(objOfQuotes) {
+// render quote function
+function renderQuotes(objOfQuotes) {
 	$('.quote-container').empty();
 	for (key in objOfQuotes) {
 		$('.quote-container').prepend(createQuote(objOfQuotes[key]));
 	}
+};
 
-	// arr.map(
-	// 	function(quote) {
-	// 		$('.quote-container').append(createQuote(quote));
-	// 	});
-	};
+// adds a quote object to a given quoteList
+function addQuote (quoteObj, quotesList) {
+	quotesList[quoteObj.id] = quoteObj;
+}
 
-	// adds a quote object to allQuotes
-	function addQuote (quoteObj) {
-		allQuotes[quoteObj.id] = quoteObj;
-	}
-
-
-
-
-
-
-
-	// // Get quotes from local storage, re-create quote objects, render quotes
-	// var quoteArray = JSON.parse(localStorage.getItem('quotes'));
-	// quoteArray = quoteArray.map(function(obj) {
-	// 	return new Quote(obj.text, obj.author);
-	// });
-	// renderQuotes(quoteArray);
-	// console.log(quoteArray);
-
-	// Initial quotes - takes an array of quote/author strings, creates objects, then maps through
-	// the array to add the quote objects to an object for all quotes by unique id
-	var quoteArray = [];
-
-
-	for (var i=0; i<existingQuotes.length; i++) {
-		 quoteArray.push( new Quote (existingQuotes[i][0], existingQuotes[i][1]) );
-	}
-	var allQuotes = new AllQuotes();
-	quoteArray.map(addQuote);
-	console.log(allQuotes);
-
-	renderQuotes(allQuotes);
-	
-
-
-
-	// filter quotes by author
-	function filterByAuthor(quotesObj, author) {
-		var authorQuotes = new AllQuotes();
-		for (key in quotesObj) {
-			if (quotesObj[key].author === author) {
-				addQuote
-			}
+// filter quotes by author
+function filterByAuthor(quotesList, author) {
+	var authorQuotes = new QuoteList();
+	for (key in quotesList) {
+		if (quotesList[key].author === author) {
+			addQuote(quotesList[key],authorQuotes);
 		}
-
-
-
-		var authorArray = []
-		for(var i=0; i<arr.length; i++) {
-			if (arr[i].author === author) {
-				authorArray.push(arr[i]);
-			}
-		}
-		return authorArray;
 	}
+	return authorQuotes;
+}
+
+
+
+
+// Get quotes from local storage, re-create quote objects, render quotes
+var allQuotes = new QuoteList(JSON.parse(localStorage.getItem('quotes')));
+for (key in allQuotes) {
+	allQuotes[key] = new Quote(allQuotes[key].text, allQuotes[key].author);
+}
+renderQuotes(allQuotes);
+
+
+
+
+
+
+
+// var quoteArray = JSON.parse(localStorage.getItem('quotes'));
+// quoteArray = quoteArray.map(function(obj) {
+// 	return new Quote(obj.text, obj.author);
+// });
+// console.log(quoteArray);
+
+
+
+// Initial quotes - takes an array of quote/author strings, creates objects, then maps through
+// the array to add the quote objects to an object for all quotes by unique id
+// var quoteArray = [];
+
+
+// for (var i=0; i<existingQuotes.length; i++) {
+// 	 quoteArray.push( new Quote (existingQuotes[i][0], existingQuotes[i][1]) );
+// }
+// var allQuotes = new QuoteList();
+// quoteArray.map(function(obj) {
+// 	addQuote(obj, allQuotes);
+// });
+// renderQuotes(allQuotes);
+
+
+
+
 
 
 
 
 // EVENT HANDLERS
+$(document).on('ready', function() {
+
 	$(document).on('click','#add-quote', function() {
 		$('.quote-form').toggle();
 	});
@@ -134,13 +143,9 @@ var existingQuotes =
 		// validate text
 		if (isInputValid(quoteText) && isInputValid(quoteAuthor)) {
 			var newQuote = new Quote(quoteText,quoteAuthor);
-			addQuote(newQuote);
+			addQuote(newQuote,allQuotes);
 			renderQuotes(allQuotes);
-
-
-			// quoteArray.unshift(newQuote);
-
-			localStorage.setItem('quotes',JSON.stringify(quoteArray));
+			localStorage.setItem('quotes',JSON.stringify(allQuotes));
 			$(this)[0].reset();
 			$(this).toggle();
 		}
@@ -149,23 +154,18 @@ var existingQuotes =
 
 	// When user clicks on an author, sorts quotes by author and re-renders page
 	$(document).on('click','.quote-author', function() {
-		renderQuotes(filterByAuthor(quoteArray, $(this).text()));
+		renderQuotes(filterByAuthor(allQuotes, $(this).text()));
 	});
 
 
-	// Delete quote
+	// Delete quote from quote list, re-save to local storage, and re-render
 	$(document).on('click','.delete-btn', function() {
-		$(this).closest('.quote').remove();
-
+		var quoteID = $(this).closest('.quote').attr('data-id');
+		console.log(quoteID);
+		delete allQuotes[quoteID];
+		localStorage.setItem('quotes',JSON.stringify(allQuotes));
+		renderQuotes(allQuotes);
 	});
-
-
-
-
-
-
-
-
 });
 
 
