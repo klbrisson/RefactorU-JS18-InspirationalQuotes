@@ -23,8 +23,6 @@ for (var i=0; i<existingQuotes.length; i++) {
 
 
 
-
-
 // QUOTE FORM VALIDATION
 function isInputValid (input) {
 	return typeof input !== 'string' || input === '' ? false : true;
@@ -102,24 +100,40 @@ function filterByAuthor(quotesList, author) {
 	return authorQuotes;
 }
 
+
+// filter quotes by rating
+function filterByRating(quotesList, rating) {
+	var ratingQuotes = new QuoteList();
+	for (key in quotesList) {
+		if (quotesList[key].rating === rating) {
+			addQuote(quotesList[key],ratingQuotes);
+		}
+	}
+	return ratingQuotes;
+}
+
+function toggleStar()
+
+// changes stars to filled based on rating
 function displayRating(rating) {
-	for (i=0; i <= 5; i++) {
+	for (i=1; i <= 5; i++) {
 		var star = $('[data-rating="' + rating + '"]').find('[data-star="' + i + '"]');
 		i <= +rating ? star.text('★') : star.text('☆');
 	}
 }
 
+// sets the rating for the given quote object within a quote list
 function setRating(rating, thisID, quotesList) {
 	quotesList[thisID].rating = rating;
 }
 
+// saves changes to quote list in local storage and re-renders quotes
 function saveAndRender(item) {
 	localStorage.setItem('quotes',JSON.stringify(item));
 	renderQuotes(item);
 }
 
-
-// Get quotes from local storage, re-create quote objects, render quotes
+// Get quotes from local storage, re-create quote objects
 var storedQuotes = localStorage.getItem('quotes');
 if (storedQuotes !== null && storedQuotes !== undefined){
 	allQuotes = new QuoteList(JSON.parse(storedQuotes));
@@ -127,7 +141,6 @@ if (storedQuotes !== null && storedQuotes !== undefined){
 else if (allQuotes === undefined) {
 	var allQuotes = new QuoteList();
 }
-
 
 
 
@@ -161,6 +174,18 @@ $(document).on('ready', function() {
 		renderQuotes(filterByAuthor(allQuotes, $(this).text()));
 	});
 
+	// When user clicks on filter by rating, sorts quotes by rating and re-renders page
+	$(document).on('click','#rating-filter-btn', function() {
+		$('.rating-filter').toggle();
+	});
+
+	$(document).on('change', '.rating-filter', function() {
+		var rating = $('.rating-filter').val();
+		renderQuotes(filterByRating(allQuotes, rating));
+		$(this).toggle();
+	});
+
+
 
 	// Delete quote from quote list, re-save to local storage, and re-render
 	$(document).on('click','.delete-btn', function() {
@@ -180,8 +205,6 @@ $(document).on('ready', function() {
 		setRating(rating, id, allQuotes);
 		saveAndRender(allQuotes);
 	});
-
-
 
 });
 

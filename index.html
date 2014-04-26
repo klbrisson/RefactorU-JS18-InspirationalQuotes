@@ -12,17 +12,46 @@
 		<header>
 			<h1>Inspirational Quotes</h1>
 		</header>
-		<button type="button" class="btn btn-default" id="add-quote">Add Quote</button>
+		<button class="btn btn-default" id="add-quote">Add Quote</button>
+		<button class="btn btn-default" id="rating-filter-btn">Filter By Rating</button>
+
+
+
+
 		<form class="quote-form">
-			<textarea id="new-text" placeholder="New Quote"></textarea>
-			<label>Author</label><input id="new-author">
-			<input type="submit">
+			<div class="row">
+				<div class="col-xs-4">
+					<div class="form-group">
+						<label>Add a Quote!</label>
+						<textarea id="new-text" class="form-control" placeholder="New Quote"></textarea>
+					</div>
+					<div class="form-group">
+						<label>Author</label>
+						<input id="new-author" class="form-control" placeholder="Author">
+					</div>
+					<button type="submit" class="btn btn-default">Submit</button>
+				</div>
+			</div>
 		</form>
+		
+		<select class="rating-filter form-control">
+		  <option>0</option>
+		  <option>1</option>
+		  <option>2</option>
+		  <option>3</option>
+		  <option>4</option>
+		  <option>5</option>
+		</select>
+
+
+
 
 		<div class="quote template">
-			<p>"<span class="quote-text"></span>"</p>
-			<button class="quote-author btn btn-default btn-sm"></button>
-			<button class="delete-btn btn btn-default">✖</button>
+			<blockquote class="quote-style">
+				<p class="quote-text"></p>
+				<footer><button class="quote-author btn"></button></footer>
+			</blockquote>
+			<button class="delete-btn btn">✖</button>
 
 			<div class="rating">
 				<span data-star="1" class="star">☆</span>
@@ -31,6 +60,7 @@
 				<span data-star="4" class="star">☆</span>
 				<span data-star="5" class="star">☆</span>
 			</div>
+
 		</div>
 
 		<div class="quote-container"></div>

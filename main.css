@@ -3,18 +3,40 @@
 	display: none;
 }
 .quote {
-	border: 1px solid #000;
 	width: 60%;
 	position: relative;
+	border-bottom: 1px solid #E6E6E6;
 }
 
 .quote-author, .delete-btn {
 	border: none;
+	background-color: transparent;
 }
 
 .delete-btn {
 	position: absolute;
-	bottom: 10px;
+	display: inline-block;
+	bottom: 5px;
 	right: 10px;
+	color: #BA1616;
+	padding: 0;
 }
 
+.star {
+	color: #FFA600;
+}
+.rating {
+	display: inline-block;
+	position: absolute;
+	left: 60px;
+	bottom: 5px;
+}
+
+.quote-style {
+	padding: 25px;
+	margin-bottom: 0;
+}
+
+.rating-filter {
+	display: none;
+}
