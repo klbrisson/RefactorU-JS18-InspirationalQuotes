@@ -87,12 +87,12 @@ function renderQuotes(objOfQuotes) {
 
 // adds a quote object to a given quoteList
 function addQuote (quoteObj, quotesList) {
-	var length = 0;
+	var newID = 0;
 	for (key in quotesList) {
-		length++;
+		newID = quotesList[key].id + 1;
 	}
-	quoteObj.id = length;
-	quotesList[length] = quoteObj;
+	quoteObj.id = newID;
+	quotesList[newID] = quoteObj;
 }
 
 // filter quotes by author
@@ -152,6 +152,7 @@ $(document).on('ready', function() {
 
 	// Submit new quote, validate input, create quote object, push to quote array, save to local storage, and re-render quotes
 	$(document).on('submit','.quote-form', function() {
+
 		var quoteText = $('#new-text').val();
 		var quoteAuthor = $('#new-author').val();
 		// validate text
