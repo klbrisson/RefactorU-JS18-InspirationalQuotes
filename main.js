@@ -20,7 +20,7 @@ var allQuotes = new QuoteList();
 for (var i=0; i<existingQuotes.length; i++) {
 	addQuote(existingQuotes[i], allQuotes);
 }
-
+// End of code for starter quotes ---------------------------------
 
 
 // QUOTE FORM VALIDATION
